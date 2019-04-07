@@ -8,7 +8,7 @@ import lombok.Getter;
 
 import gg.sep.twitchapi.DataAPI;
 import gg.sep.twitchapi.TwitchAPIConfig;
-import gg.sep.twitchapi.model.DataListResponse;
+import gg.sep.twitchapi.model.DataList;
 import gg.sep.twitchapi.model.users.TwitchUser;
 import gg.sep.twitchapi.model.users.TwitchUsersFollows;
 import gg.sep.twitchapi.model.users.UsersQueryString;
@@ -109,7 +109,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
     }
 
     @Override
-    protected DataListResponse<TwitchUser> getDataList(final String json) {
+    protected DataList<TwitchUser> getDataList(final String json) {
         return TwitchUser.parseDataList(json);
     }
 
@@ -120,7 +120,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
             return Optional.empty();
         }
 
-        final DataListResponse<TwitchUser> response = getDataList(jsonResponse.get());
+        final DataList<TwitchUser> response = getDataList(jsonResponse.get());
         return response.getData().isEmpty() ? Optional.empty() : Optional.of(response.getData().get(0));
     }
 }

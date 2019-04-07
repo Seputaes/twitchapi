@@ -1,7 +1,7 @@
 package gg.sep.twitchapi;
 
 import gg.sep.twitchapi.model.APIObject;
-import gg.sep.twitchapi.model.DataListResponse;
+import gg.sep.twitchapi.model.DataList;
 import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
 
 /**
@@ -21,5 +21,5 @@ public abstract class DataAPI<T extends APIObject> extends BaseTwitchAPI {
         return apiPath;
     }
 
-    protected abstract DataListResponse<T> getDataList(String json);
+    protected abstract DataList<T> getDataList(String json);
 }

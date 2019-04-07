@@ -9,7 +9,7 @@ import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 
 import gg.sep.twitchapi.model.APIObject;
-import gg.sep.twitchapi.model.DataListResponsePaginated;
+import gg.sep.twitchapi.model.DataListPaginated;
 import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
 
 /**
@@ -33,7 +33,7 @@ public abstract class PaginatedDataAPI<T extends APIObject> extends DataAPI<T> {
      * @return Paginated Data List response of the specified subtype of {@link APIObject}.
      */
     @Override
-    protected abstract DataListResponsePaginated<T> getDataList(String json);
+    protected abstract DataListPaginated<T> getDataList(String json);
 
     /**
      * Interacts with the paginated TwitchAPIs, making repeated calls using the cursor.
@@ -45,8 +45,7 @@ public abstract class PaginatedDataAPI<T extends APIObject> extends DataAPI<T> {
      * @param max Maximum number of data entry records to return.
      * @return List of data records. Will return Optional empty if there was an error, otherwise a list.
      */
-    protected Optional<List<T>> performPagination(final Map<String, String> params,
-                                                                        final double max) {
+    protected Optional<List<T>> performPagination(final Map<String, String> params, final double max) {
         final List<T> dataList = new ArrayList<>();
 
         String cursor = null;
@@ -65,7 +64,7 @@ public abstract class PaginatedDataAPI<T extends APIObject> extends DataAPI<T> {
                 break;
             }
 
-            final DataListResponsePaginated<T> response = getDataList(jsonResponse.get());
+            final DataListPaginated<T> response = getDataList(jsonResponse.get());
             cursor = response.getPagination().getCursor();
             // Append the new data to the list.
             if (!response.getData().isEmpty()) {

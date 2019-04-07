@@ -15,8 +15,8 @@ import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
 
 import gg.sep.twitchapi.model.APIObject;
-import gg.sep.twitchapi.model.DataListResponse;
-import gg.sep.twitchapi.model.DataListResponsePaginated;
+import gg.sep.twitchapi.model.DataList;
+import gg.sep.twitchapi.model.DataListTotalPaginated;
 
 /**
  * Model for a Twitch Users Follows API response object.
@@ -24,33 +24,33 @@ import gg.sep.twitchapi.model.DataListResponsePaginated;
  */
 @Getter
 public class TwitchUsersFollows implements APIObject {
-    public TwitchUser twitchUser;
+    private TwitchUser twitchUser;
 
     @SerializedName("from_id")
-    public String fromId;
+    private String fromId;
 
     @SerializedName("from_name")
-    public String fromName;
+    private String fromName;
 
     @SerializedName("to_id")
-    public String toId;
+    private String toId;
 
     @SerializedName("to_name")
-    public String toName;
+    private String toName;
 
     @SerializedName("followed_at")
-    public LocalDateTime followedAt;
+    private LocalDateTime followedAt;
 
     /**
      * Handles the parsing of the raw {@link gg.sep.twitchapi.model.DataAPIObject}.
      * Handles correctly generating the GSON generic {@link TypeToken} and passing it to
-     * {@link DataListResponse#fromJson(Gson, String, TypeToken)} constructor.
+     * {@link DataList#fromJson(Gson, String, TypeToken)} constructor.
      * @param json Raw JSON response for this API.
-     * @return Constructed {@link DataListResponse} consisting of Twitch Users Follows.
+     * @return Constructed {@link DataList} consisting of Twitch Users Follows.
      */
-    public static DataListResponse<TwitchUsersFollows> parseDataList(final String json) {
-        final TypeToken<DataListResponsePaginated<TwitchUsersFollows>> typeToken = new TypeToken<>(){};
-        return DataListResponsePaginated.fromJson(getGson(), json, typeToken);
+    public static DataList<TwitchUsersFollows> parseDataList(final String json) {
+        final TypeToken<DataListTotalPaginated<TwitchUsersFollows>> typeToken = new TypeToken<>(){};
+        return DataListTotalPaginated.fromJson(getGson(), json, typeToken);
     }
 
     /**

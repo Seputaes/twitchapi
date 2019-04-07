@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
 
 import gg.sep.twitchapi.model.APIObject;
-import gg.sep.twitchapi.model.DataListResponse;
+import gg.sep.twitchapi.model.DataList;
 
 /**
  * Model for a Twitch User API response object.
@@ -17,16 +17,15 @@ import gg.sep.twitchapi.model.DataListResponse;
 public class TwitchUser implements APIObject {
     private String id;
     private String login;
-    private String type;
+    private UserType type;
     private String description;
-    private int viewCount;
     private String email;
 
     @SerializedName("display_name")
     private String displayName;
 
     @SerializedName("broadcaster_type")
-    private String broadcasterType; // TODO: Make this an enum
+    private BroadcasterType broadcasterType;
 
     @SerializedName("profile_image_url")
     private String profileImageURL; // TODO: Make this a URL
@@ -34,16 +33,19 @@ public class TwitchUser implements APIObject {
     @SerializedName("offline_image_url")
     private String offlineImageURL; // TODO: Make this a URL
 
+    @SerializedName("view_count")
+    private long viewCount;
+
     /**
      * Handles the parsing of the raw {@link gg.sep.twitchapi.model.DataAPIObject}.
      * Handles correctly generating the GSON generic {@link TypeToken} and passing it to
-     * {@link DataListResponse#fromJson(Gson, String, TypeToken)} constructor.
+     * {@link DataList#fromJson(Gson, String, TypeToken)} constructor.
      * @param json Raw JSON response for this API.
-     * @return Constructed {@link DataListResponse} consisting of Twitch Users.
+     * @return Constructed {@link DataList} consisting of Twitch Users.
      */
-    public static DataListResponse<TwitchUser> parseDataList(final String json) {
-        final TypeToken<DataListResponse<TwitchUser>> typeToken = new TypeToken<>(){};
-        return DataListResponse.fromJson(getGson(), json, typeToken);
+    public static DataList<TwitchUser> parseDataList(final String json) {
+        final TypeToken<DataList<TwitchUser>> typeToken = new TypeToken<>(){};
+        return DataList.fromJson(getGson(), json, typeToken);
     }
 
     /**

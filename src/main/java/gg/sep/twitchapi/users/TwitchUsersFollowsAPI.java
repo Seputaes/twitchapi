@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
-import gg.sep.twitchapi.PaginatedDataAPI;
+import gg.sep.twitchapi.PaginatedTotalDataAPI;
 import gg.sep.twitchapi.TwitchAPIConfig;
-import gg.sep.twitchapi.model.DataListResponsePaginated;
+import gg.sep.twitchapi.model.DataListTotalPaginated;
 import gg.sep.twitchapi.model.users.TwitchUsersFollows;
 import gg.sep.twitchapi.model.users.UsersFollowsQueryString;
 import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
@@ -17,7 +17,7 @@ import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
  * Implementation for the Users Follows API.
  * Reference: https://dev.twitch.tv/docs/api/reference/#get-users-follows
  */
-public class TwitchUsersFollowsAPI extends PaginatedDataAPI<TwitchUsersFollows> {
+public class TwitchUsersFollowsAPI extends PaginatedTotalDataAPI<TwitchUsersFollows> {
 
     private static final String API_PATH = "/users/follows";
 
@@ -30,7 +30,6 @@ public class TwitchUsersFollowsAPI extends PaginatedDataAPI<TwitchUsersFollows> 
     TwitchUsersFollowsAPI(final TwitchAPIConfig apiConfig, final TwitchAPIRateLimiter rateLimiter) {
         super(apiConfig, rateLimiter, API_PATH);
     }
-
 
     Optional<List<TwitchUsersFollows>> getUserFollowing(final String userId, final double max) {
         return baseUsersFollows(UsersFollowsQueryString.FROM_ID, userId, max);
@@ -60,8 +59,8 @@ public class TwitchUsersFollowsAPI extends PaginatedDataAPI<TwitchUsersFollows> 
      * {@inheritDoc}
      */
     @Override
-    protected DataListResponsePaginated<TwitchUsersFollows> getDataList(final String json) {
-        return (DataListResponsePaginated<TwitchUsersFollows>) TwitchUsersFollows.parseDataList(json);
+    protected DataListTotalPaginated<TwitchUsersFollows> getDataList(final String json) {
+        return (DataListTotalPaginated<TwitchUsersFollows>) TwitchUsersFollows.parseDataList(json);
 
     }
 

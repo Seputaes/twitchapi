@@ -1,5 +1,7 @@
 package gg.sep.twitchapi.model.users;
 
+import java.net.URL;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -8,6 +10,7 @@ import lombok.Getter;
 
 import gg.sep.twitchapi.model.APIObject;
 import gg.sep.twitchapi.model.DataList;
+import gg.sep.twitchapi.model.serializers.URLAdapter;
 
 /**
  * Model for a Twitch User API response object.
@@ -28,10 +31,10 @@ public class TwitchUser implements APIObject {
     private BroadcasterType broadcasterType;
 
     @SerializedName("profile_image_url")
-    private String profileImageURL; // TODO: Make this a URL
+    private URL profileImageURL;
 
     @SerializedName("offline_image_url")
-    private String offlineImageURL; // TODO: Make this a URL
+    private URL offlineImageURL;
 
     @SerializedName("view_count")
     private long viewCount;
@@ -53,6 +56,8 @@ public class TwitchUser implements APIObject {
      * @return GSON object.
      */
     private static Gson getGson() {
-        return new GsonBuilder().create();
+        return new GsonBuilder()
+            .registerTypeAdapter(URL.class, new URLAdapter())
+            .create();
     }
 }

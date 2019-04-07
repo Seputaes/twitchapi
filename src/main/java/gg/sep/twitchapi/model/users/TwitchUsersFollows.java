@@ -1,15 +1,9 @@
 package gg.sep.twitchapi.model.users;
 
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
@@ -17,6 +11,7 @@ import lombok.Getter;
 import gg.sep.twitchapi.model.APIObject;
 import gg.sep.twitchapi.model.DataList;
 import gg.sep.twitchapi.model.DataListTotalPaginated;
+import gg.sep.twitchapi.model.serializers.LocalDateTimeAdapter;
 
 /**
  * Model for a Twitch Users Follows API response object.
@@ -59,12 +54,8 @@ public class TwitchUsersFollows implements APIObject {
      * @return GSON object.
      */
     private static Gson getGson() {
-        return new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-            @Override
-            public LocalDateTime deserialize(final JsonElement json, final Type type,
-                                             final JsonDeserializationContext context) throws JsonParseException {
-                return ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString()).toLocalDateTime();
-            }
-        }).create();
+        return new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
     }
 }

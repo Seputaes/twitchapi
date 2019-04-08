@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id "com.github.spotbugs" version "1.7.1"
+    id 'jacoco'
 }
 
 group 'gg.sep'
@@ -9,15 +10,22 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 11.0
 
+// variable definitions
+ext {
+    lombokVersion = "1.18.+"
+    checkstyleVersion = '8.19'
+    spotbugsVersion = '3.1.12'
+}
+
 checkstyle {
     def buildConfigDir = project(':build_config').projectDir
     configFile file("$buildConfigDir/checkstyle/checkstyle.xml")
     configDir file("$buildConfigDir/checkstyle")
-    toolVersion '8.19'
+    toolVersion project.ext.checkstyleVersion
 }
 
 spotbugs {
-    toolVersion = '3.1.12'
+    toolVersion = project.ext.spotbugsVersion
     ignoreFailures = false
 }
 
@@ -26,24 +34,54 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
     reports.html.enabled = true
 }
 
+jacocoTestReport {
+    reports {
+        html.enabled true
+        html.destination file("${buildDir}/reports/jacoco/html")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.13
+            }
+        }
+    }
+}
+
+jacocoTestReport.dependsOn test
+check.dependsOn jacocoTestCoverageVerification
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
 dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.11.+'
     compile 'org.apache.logging.log4j:log4j-core:2.11.+'
-    compileOnly 'org.projectlombok:lombok:1.18.+'
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.+'
+    compileOnly "org.projectlombok:lombok:$project.ext.lombokVersion"
+    compileOnly "com.github.spotbugs:spotbugs-annotations:$project.ext.spotbugsVersion"
+    annotationProcessor "org.projectlombok:lombok:$project.ext.lombokVersion"
     
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.guava:guava:27.+'
     implementation 'org.apache.commons:commons-collections4:4.+'
     implementation 'org.apache.commons:commons-lang3:3.+'
     implementation 'org.apache.httpcomponents:httpclient:4.5.7'
-    
-    
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
 
-compileJava {
-    options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.+'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.+'
+
+    testCompile 'org.mockito:mockito-junit-jupiter:2.26.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }

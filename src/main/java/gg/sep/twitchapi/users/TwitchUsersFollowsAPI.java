@@ -1,16 +1,17 @@
 package gg.sep.twitchapi.users;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import gg.sep.twitchapi.PaginatedTotalDataAPI;
 import gg.sep.twitchapi.TwitchAPIConfig;
 import gg.sep.twitchapi.model.DataListTotalPaginated;
 import gg.sep.twitchapi.model.users.TwitchUsersFollows;
-import gg.sep.twitchapi.model.users.UsersFollowsQueryString;
+import gg.sep.twitchapi.model.users.UsersFollowsQuery;
 import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
 
 /**
@@ -32,26 +33,26 @@ public class TwitchUsersFollowsAPI extends PaginatedTotalDataAPI<TwitchUsersFoll
     }
 
     Optional<List<TwitchUsersFollows>> getUserFollowing(final String userId, final double max) {
-        return baseUsersFollows(UsersFollowsQueryString.FROM_ID, userId, max);
+        return baseUsersFollows(UsersFollowsQuery.FROM_ID, userId, max);
     }
 
     Optional<List<TwitchUsersFollows>> getUserFollowing(final String userId) {
-        return baseUsersFollows(UsersFollowsQueryString.FROM_ID, userId, Double.POSITIVE_INFINITY);
+        return baseUsersFollows(UsersFollowsQuery.FROM_ID, userId, Double.POSITIVE_INFINITY);
     }
 
     Optional<List<TwitchUsersFollows>> getUserFollowers(final String userId, final double max) {
-        return baseUsersFollows(UsersFollowsQueryString.TO_ID, userId, max);
+        return baseUsersFollows(UsersFollowsQuery.TO_ID, userId, max);
     }
 
     Optional<List<TwitchUsersFollows>> getUserFollowers(final String userId) {
-        return baseUsersFollows(UsersFollowsQueryString.TO_ID, userId, Double.POSITIVE_INFINITY);
+        return baseUsersFollows(UsersFollowsQuery.TO_ID, userId, Double.POSITIVE_INFINITY);
     }
 
-    private Optional<List<TwitchUsersFollows>> baseUsersFollows(final UsersFollowsQueryString query,
+    private Optional<List<TwitchUsersFollows>> baseUsersFollows(final UsersFollowsQuery query,
                                                                 final String value,
                                                                 final double max) {
 
-        final Map<String, String> params = ImmutableMap.of(query.toString(), value);
+        final List<NameValuePair> params = ImmutableList.of(new BasicNameValuePair(query.toString(), value));
         return performPagination(params, max);
     }
 

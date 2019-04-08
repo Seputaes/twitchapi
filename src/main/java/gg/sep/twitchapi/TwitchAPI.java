@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
+import gg.sep.twitchapi.streams.TwitchStreamsAPI;
 import gg.sep.twitchapi.users.TwitchUsersAPI;
 import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
 
@@ -22,6 +23,9 @@ public class TwitchAPI {
     @Getter(lazy = true)
     private final TwitchUsersAPI usersAPI = initUsersAPI();
 
+    @Getter(lazy =  true)
+    private final TwitchStreamsAPI streamsAPI = initStreamsAPI();
+
     /**
      * Construct the Twitch API using the specified API configuration.
      * @param apiConfig Configuration of the Twitch API.
@@ -33,5 +37,9 @@ public class TwitchAPI {
 
     private TwitchUsersAPI initUsersAPI() {
         return new TwitchUsersAPI(getApiConfig(), getRateLimiter());
+    }
+
+    private TwitchStreamsAPI initStreamsAPI() {
+        return new TwitchStreamsAPI(getApiConfig(), getRateLimiter());
     }
 }

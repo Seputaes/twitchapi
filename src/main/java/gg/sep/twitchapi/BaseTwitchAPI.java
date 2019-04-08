@@ -3,7 +3,7 @@ package gg.sep.twitchapi;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 import lombok.AccessLevel;
@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -55,7 +56,7 @@ public abstract class BaseTwitchAPI {
         }
     }
 
-    protected Optional<String> getJsonResponse(final Map<String, String> params) {
+    protected Optional<String> getJsonResponse(final List<NameValuePair> params) {
         try {
             final HttpUriRequest request = this.getRequest(params);
             final Optional<HttpResponse> response = this.rateLimiter.execute(request);
@@ -71,21 +72,21 @@ public abstract class BaseTwitchAPI {
         return Optional.empty();
     }
 
-    private HttpUriRequest getRequest(final Map<String, String> params) {
+    private HttpUriRequest getRequest(final List<NameValuePair> params) {
         return buildRequest(HttpGet.METHOD_NAME, params);
     }
 
-    private HttpUriRequest postRequest(final Map<String, String> params) {
+    private HttpUriRequest postRequest(final List<NameValuePair> params) {
         return buildRequest(HttpPost.METHOD_NAME, params);
     }
 
-    private HttpUriRequest buildRequest(final String method, final Map<String, String> params) {
+    private HttpUriRequest buildRequest(final String method, final List<NameValuePair> params) {
         final RequestBuilder requestBuilder = RequestBuilder.create(method)
             .setHeader(authHeader)
             .setUri(getUri());
 
-        for (final Map.Entry<String, String> e : params.entrySet()) {
-            requestBuilder.addParameter(e.getKey(), e.getValue());
+        for (final NameValuePair nvp : params) {
+            requestBuilder.addParameter(nvp);
         }
         return requestBuilder.build();
     }

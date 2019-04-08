@@ -1,17 +1,18 @@
 package gg.sep.twitchapi.users;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import org.apache.http.message.BasicNameValuePair;
 
 import gg.sep.twitchapi.DataAPI;
 import gg.sep.twitchapi.TwitchAPIConfig;
 import gg.sep.twitchapi.model.DataList;
 import gg.sep.twitchapi.model.users.TwitchUser;
 import gg.sep.twitchapi.model.users.TwitchUsersFollows;
-import gg.sep.twitchapi.model.users.UsersQueryString;
+import gg.sep.twitchapi.model.users.UsersQuery;
 import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
 
 /**
@@ -50,7 +51,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
      * @return Optional of a single TwitchUser. Empty if not found or other API error.
      */
     public Optional<TwitchUser> getUserByLogin(final String login) {
-        return queryUsers(UsersQueryString.LOGIN, login);
+        return queryUsers(UsersQuery.LOGIN, login);
     }
 
     /**
@@ -59,7 +60,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
      * @return Optional of a single Twitch User. Empty if not found or other API error.
      */
     public Optional<TwitchUser> getUserByID(final String id) {
-        return queryUsers(UsersQueryString.ID, id);
+        return queryUsers(UsersQuery.ID, id);
     }
 
     /**
@@ -113,8 +114,9 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
         return TwitchUser.parseDataList(json);
     }
 
-    private Optional<TwitchUser> queryUsers(final UsersQueryString query, final String value) {
-        final Optional<String> jsonResponse = getJsonResponse(ImmutableMap.of(query.toString(), value));
+    private Optional<TwitchUser> queryUsers(final UsersQuery query, final String value) {
+        final Optional<String> jsonResponse = getJsonResponse(
+            Collections.singletonList(new BasicNameValuePair(query.toString(), value)));
 
         if (jsonResponse.isEmpty()) {
             return Optional.empty();

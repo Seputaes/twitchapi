@@ -1,12 +1,14 @@
 package gg.sep.twitchapi;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
+import com.google.common.collect.ImmutableSet;
 import lombok.extern.log4j.Log4j2;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import gg.sep.twitchapi.model.APIObject;
 import gg.sep.twitchapi.model.DataListPaginated;
@@ -45,7 +47,7 @@ public abstract class PaginatedDataAPI<T extends APIObject> extends DataAPI<T> {
      * @param max Maximum number of data entry records to return.
      * @return List of data records. Will return Optional empty if there was an error, otherwise a list.
      */
-    protected Optional<List<T>> performPagination(final Map<String, String> params, final double max) {
+    protected Optional<List<T>> performPagination(final List<NameValuePair> params, final double max) {
         final List<T> dataList = new ArrayList<>();
 
         String cursor = null;
@@ -85,13 +87,20 @@ public abstract class PaginatedDataAPI<T extends APIObject> extends DataAPI<T> {
      * @param cursor Pagination cursor string, if any.
      * @return Raw JSON string from the API.
      */
-    private Optional<String> getPaginatedJson(final Map<String, String> params, final String cursor) {
-        final Map<String, String> paramsMap = new HashMap<>(params);
-        paramsMap.put("first", String.valueOf(MAX));
+    private Optional<String> getPaginatedJson(final List<NameValuePair> params, final String cursor) {
+        final List<NameValuePair> paramsList = new ArrayList<>(params);
+        // remove first/after from the list of parameters if it exists
+        IntStream.range(0, paramsList.size())
+            .filter(i -> ImmutableSet.of("first", "after").contains(params.get(i).getName()))
+            .boxed()
+            .forEach(i -> paramsList.remove(i));
+
+        paramsList.add(new BasicNameValuePair("first", String.valueOf(MAX)));
+
         if (cursor != null && cursor.length() > 0) {
-            paramsMap.put("after", cursor);
+            paramsList.add(new BasicNameValuePair("after", cursor));
         }
 
-        return getJsonResponse(paramsMap);
+        return getJsonResponse(paramsList);
     }
 }

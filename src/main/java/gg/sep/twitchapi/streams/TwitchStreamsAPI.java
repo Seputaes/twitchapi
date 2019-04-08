@@ -45,8 +45,8 @@ public class TwitchStreamsAPI extends PaginatedDataAPI<TwitchStream> {
      * This generally will not return exactly 1000 streams due to caching and differences between pages in pagination.
      * @return Optional of the top 1000 Twitch Streams, empty if error.
      */
-    public Optional<Set<TwitchStream>> getTopStreams() {
-        return performPagination(new ArrayList<>(), 1000).map(HashSet::new);
+    public Set<TwitchStream> getTopStreams() {
+        return new HashSet<>(performPagination(new ArrayList<>(), 1000));
     }
 
     /**
@@ -56,7 +56,7 @@ public class TwitchStreamsAPI extends PaginatedDataAPI<TwitchStream> {
      * @param userLogins Collection of user logins. This will be filtered down to a Set to ensure no duplicates.
      * @return An optional Set of unique Streams matching the user logins, Optional empty if API error.
      */
-    public Optional<Set<TwitchStream>> getStreamsForUserLogins(final Collection<String> userLogins) {
+    public Set<TwitchStream> getStreamsForUserLogins(final Collection<String> userLogins) {
 
         final Set<String> logins = new HashSet<>(userLogins);
         final List<NameValuePair> params = buildParams(
@@ -69,9 +69,9 @@ public class TwitchStreamsAPI extends PaginatedDataAPI<TwitchStream> {
         final Iterable<List<NameValuePair>> batches = Iterables.partition(params, ENTRIES_PER_STREAM_REQ);
 
         for (final List<NameValuePair> batchParams : batches) {
-            performPagination(batchParams, batchParams.size()).ifPresent(streams::addAll);
+            streams.addAll(performPagination(batchParams, batchParams.size()));
         }
-        return (streams.isEmpty()) ? Optional.empty() : Optional.of(streams);
+        return streams;
     }
 
     /**
@@ -80,7 +80,7 @@ public class TwitchStreamsAPI extends PaginatedDataAPI<TwitchStream> {
      * @return Optional of the TwitchStream, empty if not found or API error.
      */
     public Optional<TwitchStream> getStreamForUserLogin(final String userLogin) {
-        return getStreamsForUserLogins(ImmutableSet.of(userLogin)).map(c -> c.iterator().next());
+        return getStreamsForUserLogins(ImmutableSet.of(userLogin)).stream().findFirst();
     }
 
     @Override

@@ -47,7 +47,7 @@ public abstract class PaginatedDataAPI<T extends APIObject> extends DataAPI<T> {
      * @param max Maximum number of data entry records to return.
      * @return List of data records. Will return Optional empty if there was an error, otherwise a list.
      */
-    protected Optional<List<T>> performPagination(final List<NameValuePair> params, final double max) {
+    protected List<T> performPagination(final List<NameValuePair> params, final double max) {
         final List<T> dataList = new ArrayList<>();
 
         String cursor = null;
@@ -75,10 +75,7 @@ public abstract class PaginatedDataAPI<T extends APIObject> extends DataAPI<T> {
                 break;
             }
         }
-        if (dataList.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(dataList);
+        return dataList;
     }
 
     /**

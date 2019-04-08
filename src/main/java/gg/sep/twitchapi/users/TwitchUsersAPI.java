@@ -70,7 +70,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
      * @param userId Numeric string of the Twitch User.
      * @return Optional of a list of TwitchUsersFollows. Empty optional if there was an API error.
      */
-    public Optional<List<TwitchUsersFollows>> getUserFollowing(final String userId) {
+    public List<TwitchUsersFollows> getUserFollowing(final String userId) {
         return getFollowersAPI().getUserFollowing(userId);
     }
 
@@ -82,7 +82,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
      * @param max Maximum number of objects to return in the list (rounded up to the nearest 100).
      * @return Optional of a list of TwitchUsersFollows. Empty optional if there was an API error.
      */
-    public Optional<List<TwitchUsersFollows>> getUserFollowing(final String userId, final int max) {
+    public List<TwitchUsersFollows> getUserFollowing(final String userId, final int max) {
         return getFollowersAPI().getUserFollowing(userId, (double) max);
     }
 
@@ -93,7 +93,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
      * @param userId Numeric string of the Twitch User for which to get followers.
      * @return Optional of a list of TwitchUsersFollows. Empty optional if there was an API error.
      */
-    public Optional<List<TwitchUsersFollows>> getUserFollowers(final String userId) {
+    public List<TwitchUsersFollows> getUserFollowers(final String userId) {
         return getFollowersAPI().getUserFollowers(userId);
     }
 
@@ -105,7 +105,7 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
      * @param max Maximum number of objects to return in the list (rounded up to the nearest 100)
      * @return Optional of a list of TwitchUsersFollows. Empty optional if there was an API error.
      */
-    public Optional<List<TwitchUsersFollows>> getUserFollowers(final String userId, final int max) {
+    public List<TwitchUsersFollows> getUserFollowers(final String userId, final int max) {
         return getFollowersAPI().getUserFollowers(userId, (double) max);
     }
 

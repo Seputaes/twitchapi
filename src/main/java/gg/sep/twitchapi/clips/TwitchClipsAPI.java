@@ -36,9 +36,9 @@ public class TwitchClipsAPI extends PaginatedDataAPI<TwitchClip> {
      * Get clips for the specified User ID.
      * Returns a maximum of 1000 clips (per Twitch API limits)
      * @param userId Numeric String ID of the user for which to get clips.
-     * @return Optional list of Twitch clips, empty if no clips or API error.
+     * @return List of Twitch clips, empty if no clips or API error.
      */
-    public Optional<List<TwitchClip>> getClipsForUserId(final String userId) {
+    public List<TwitchClip> getClipsForUserId(final String userId) {
         final List<NameValuePair> params = ImmutableList.of(
             new BasicNameValuePair(ClipsQuery.BROADCASTER_ID.toString(), userId));
 
@@ -54,7 +54,7 @@ public class TwitchClipsAPI extends PaginatedDataAPI<TwitchClip> {
         final List<NameValuePair> params = ImmutableList.of(
             new BasicNameValuePair(ClipsQuery.ID.toString(), clipId));
 
-        return performPagination(params, 1).map(c -> c.iterator().next());
+        return performPagination(params, 1).stream().findFirst();
     }
 
     /**

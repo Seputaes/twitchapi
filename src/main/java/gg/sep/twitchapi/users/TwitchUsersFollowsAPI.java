@@ -1,7 +1,6 @@
 package gg.sep.twitchapi.users;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.http.NameValuePair;
@@ -32,23 +31,23 @@ public class TwitchUsersFollowsAPI extends PaginatedTotalDataAPI<TwitchUsersFoll
         super(apiConfig, rateLimiter, API_PATH);
     }
 
-    Optional<List<TwitchUsersFollows>> getUserFollowing(final String userId, final double max) {
+    List<TwitchUsersFollows> getUserFollowing(final String userId, final double max) {
         return baseUsersFollows(UsersFollowsQuery.FROM_ID, userId, max);
     }
 
-    Optional<List<TwitchUsersFollows>> getUserFollowing(final String userId) {
+    List<TwitchUsersFollows> getUserFollowing(final String userId) {
         return baseUsersFollows(UsersFollowsQuery.FROM_ID, userId, Double.POSITIVE_INFINITY);
     }
 
-    Optional<List<TwitchUsersFollows>> getUserFollowers(final String userId, final double max) {
+    List<TwitchUsersFollows> getUserFollowers(final String userId, final double max) {
         return baseUsersFollows(UsersFollowsQuery.TO_ID, userId, max);
     }
 
-    Optional<List<TwitchUsersFollows>> getUserFollowers(final String userId) {
+    List<TwitchUsersFollows> getUserFollowers(final String userId) {
         return baseUsersFollows(UsersFollowsQuery.TO_ID, userId, Double.POSITIVE_INFINITY);
     }
 
-    private Optional<List<TwitchUsersFollows>> baseUsersFollows(final UsersFollowsQuery query,
+    private List<TwitchUsersFollows> baseUsersFollows(final UsersFollowsQuery query,
                                                                 final String value,
                                                                 final double max) {
 

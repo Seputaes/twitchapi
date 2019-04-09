@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "id": "clipOneId",
+      "url": "https://example.com/url1",
+      "embed_url": "https://example.com/embed1",
+      "broadcaster_id": "123",
+      "broadcaster_name": "seputaes",
+      "creator_id": "456",
+      "creator_name": "kotnat",
+      "video_id": "",
+      "game_id": "789",
+      "language": "en",
+      "title": "title1",
+      "view_count": 12,
+      "created_at": "2019-01-01T01:01:01Z",
+      "thumbnail_url": "https://example.com/thumbnail1"
+    },
+    {
+      "id": "clipTwoId",
+      "url": "https://example.com/url2",
+      "embed_url": "https://example.com/embed2",
+      "broadcaster_id": "321",
+      "broadcaster_name": "seputaes",
+      "creator_id": "654",
+      "creator_name": "kotnat",
+      "video_id": "",
+      "game_id": "987",
+      "language": "en",
+      "title": "title2",
+      "view_count": 21,
+      "created_at": "2019-02-02T02:02:02Z",
+      "thumbnail_url": "https://example.com/thumbnail2"
+    }
+  ],
+  "pagination": {
+    "cursor": "abc123"
+  }
+}

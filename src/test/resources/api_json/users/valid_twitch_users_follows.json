@@ -1,0 +1,29 @@
+{
+  "total": 222,
+  "data": [
+    {
+      "from_id": "1234",
+      "from_name": "from_name1",
+      "to_id": "5678",
+      "to_name": "seputaes",
+      "followed_at": "2019-01-01T01:01:01Z"
+    },
+    {
+      "from_id": "9876",
+      "from_name": "from_name2",
+      "to_id": "5432",
+      "to_name": "seputaes",
+      "followed_at": "2019-04-07T05:16:37Z"
+    },
+    {
+      "from_id": "7685",
+      "from_name": "from_name3",
+      "to_id": "9102",
+      "to_name": "seputaes",
+      "followed_at": "2019-04-07T05:16:16Z"
+    }
+  ],
+  "pagination": {
+    "cursor": "abc123"
+  }
+}

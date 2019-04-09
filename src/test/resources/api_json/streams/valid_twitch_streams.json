@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "id": "1234567890",
+      "user_id": "123",
+      "user_name": "seputaes",
+      "game_id": "456",
+      "community_ids": [
+        "abc-123-456",
+        "cba-321-654"
+      ],
+      "type": "live",
+      "title": "Stream Title 1",
+      "viewer_count": 123,
+      "started_at": "2019-01-01T01:01:01Z",
+      "language": "en",
+      "thumbnail_url": "https://example.com/tn1-{width}x{height}.jpg",
+      "tag_ids": [
+        "def-123-456",
+        "fed-321-654"
+      ]
+    },
+    {
+      "id": "9876543210",
+      "user_id": "321",
+      "user_name": "kotnat",
+      "game_id": "654",
+      "community_ids": [
+        "ghi-123-456",
+        "ihg-321-654"
+      ],
+      "type": "",
+      "title": "Stream Title 2",
+      "viewer_count": 321,
+      "started_at": "2019-02-02T02:02:02Z",
+      "language": "en",
+      "thumbnail_url": "https://example.com/tn2-{width}x{height}.jpg",
+      "tag_ids": [
+        "jkl-123-456",
+        "lkj-321-654"
+      ]
+    }
+  ],
+  "pagination": {
+    "cursor": "321abc"
+  }
+}

@@ -64,6 +64,17 @@ public class TwitchUsersAPI extends DataAPI<TwitchUser> {
     }
 
     /**
+     * Returns <code>true</code> if the followerId is following the followeeId on Twitch.
+     * @param followerId Twitch User ID of the follower.
+     * @param followeeId Twitch User ID of the followee.
+     * @return <code>true</code> if the followerId is following the followeeId on Twitch;
+     *         <code>false</code> otherwise.
+     */
+    public boolean userIsFollowing(final String followerId, final String followeeId) {
+        return getFollowersAPI().userIsFollowing(followerId, followeeId);
+    }
+
+    /**
      * Gets a list of ALL of the TwitchUserFollows that a specified Twitch User is following.
      * WARNING: This list could be very large and this method can block until all are returned.
      *          Twitch places a hard response limit of 100 objects per response.

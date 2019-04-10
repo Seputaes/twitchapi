@@ -31,6 +31,21 @@ public class TwitchUsersFollowsAPI extends PaginatedTotalDataAPI<TwitchUsersFoll
         super(apiConfig, rateLimiter, API_PATH);
     }
 
+    /**
+     * Returns <code>true</code> if the followerId is following the followeeId on Twitch.
+     * @param followerId Twitch User ID of the follower.
+     * @param followeeId Twitch User ID of the followee.
+     * @return <code>true</code> if the followerId is following the followeeId on Twitch;
+     *         <code>false</code> otherwise.
+     */
+    boolean userIsFollowing(final String followerId, final String followeeId) {
+        final List<NameValuePair> params = ImmutableList.of(
+            new BasicNameValuePair(UsersFollowsQuery.FROM_ID.toString(), followerId),
+            new BasicNameValuePair(UsersFollowsQuery.TO_ID.toString(), followeeId)
+        );
+        return !performPagination(params, 1).isEmpty();
+    }
+
     List<TwitchUsersFollows> getUserFollowing(final String userId, final double max) {
         return baseUsersFollows(UsersFollowsQuery.FROM_ID, userId, max);
     }

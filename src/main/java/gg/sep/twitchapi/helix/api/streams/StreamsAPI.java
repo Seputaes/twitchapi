@@ -1,5 +1,6 @@
 package gg.sep.twitchapi.helix.api.streams;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,26 @@ public class StreamsAPI extends AbstractPaginatedAPI<Stream, Streams> {
      */
     public List<Stream> getStreamsByUserLogin(final List<String> userLogins) {
         return performPagination(getCallParams(null, userLogins, null, null, null), 0);
+    }
+
+    /**
+     * Gets a live Stream by a user/broadcaster ID.
+     * @param userId ID of the user/broadcaster.
+     * @return Optional of the Stream if it is live, otherwise empty if it is offline or an invalid user.
+     */
+    public Optional<Stream> getStreamByUserId(final String userId) {
+        final List<Stream> streams = getStreamsByUserId(Collections.singletonList(userId));
+        return (streams.isEmpty()) ? Optional.empty() : Optional.of(streams.get(0));
+    }
+
+    /**
+     * Gets a live Stream by a user/broadcaster Login name.
+     * @param userLogin Login name of the user/broadcaster.
+     * @return Optional of the Stream if it is live, otherwise empty if it is offline or an invalid user.
+     */
+    public Optional<Stream> getStreamByUserLogin(final String userLogin) {
+        final List<Stream> streams = getStreamsByUserLogin(Collections.singletonList(userLogin));
+        return (streams.isEmpty()) ? Optional.empty() : Optional.of(streams.get(0));
     }
 
     /**

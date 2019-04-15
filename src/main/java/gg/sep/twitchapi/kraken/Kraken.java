@@ -12,6 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import gg.sep.twitchapi.kraken.api.channels.ChannelsAPI;
+import gg.sep.twitchapi.kraken.api.users.UsersAPI;
 import gg.sep.twitchapi.kraken.interceptor.KrakenAuthInterceptor;
 import gg.sep.twitchapi.kraken.interceptor.KrakenClientInterceptor;
 import gg.sep.twitchapi.serializer.URLAdapter;
@@ -44,6 +45,9 @@ public class Kraken {
 
     @Getter(lazy = true)
     private final ChannelsAPI channelsAPI = new ChannelsAPI(this);
+
+    @Getter(lazy = true)
+    private final UsersAPI usersAPI = new UsersAPI(this);
 
     /**
      * Construct the Kraken API wrapper for the specified API client ID.

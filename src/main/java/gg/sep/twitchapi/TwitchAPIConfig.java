@@ -2,6 +2,7 @@ package gg.sep.twitchapi;
 
 import lombok.Builder;
 import lombok.Getter;
+import redis.clients.jedis.JedisPool;
 
 /**
  * Builder/Model for the Twitch API Configuration.
@@ -12,6 +13,6 @@ import lombok.Getter;
 public class TwitchAPIConfig {
     private String login;
     private String clientId;
-    private String oauthToken;
+    private JedisPool jedisPool;
     private double apiRateLimit;
 }

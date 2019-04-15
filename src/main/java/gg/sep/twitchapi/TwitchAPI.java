@@ -4,31 +4,28 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
-import gg.sep.twitchapi.clips.TwitchClipsAPI;
-import gg.sep.twitchapi.streams.TwitchStreamsAPI;
-import gg.sep.twitchapi.utils.TwitchAPIRateLimiter;
-import gg.sep.twitchapi.users.TwitchUsersAPI;
+import gg.sep.twitchapi.helix.Helix;
+import gg.sep.twitchapi.kraken.Kraken;
+import gg.sep.twitchapi.util.TwitchAPIRateLimiter;
 
 /**
- * Provides access to the various Twitch API endpoints.
+ * Wrapper containing both the Kraken (v5) and Helix (New) Twitch APIs.
+ *
+ * Kraken Reference: https://dev.twitch.tv/docs/v5/
+ * Helix Reference: https://dev.twitch.tv/docs/api/reference/
  */
 @Log4j2
 public class TwitchAPI {
 
-    @Getter(value = AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PRIVATE)
     private final TwitchAPIConfig apiConfig;
-
-    @Getter(value = AccessLevel.PRIVATE)
-    private final TwitchAPIRateLimiter rateLimiter;
+    private final TwitchAPIRateLimiter rateLimiter; // TODO get this working with retrofit
 
     @Getter(lazy = true)
-    private final TwitchUsersAPI usersAPI = initUsersAPI();
+    private final Kraken kraken = initKraken();
 
     @Getter(lazy = true)
-    private final TwitchStreamsAPI streamsAPI = initStreamsAPI();
-
-    @Getter(lazy = true)
-    private final TwitchClipsAPI clipsAPI = initClipsAPI();
+    private final Helix helix = initHelix();
 
     /**
      * Construct the Twitch API using the specified API configuration.
@@ -39,15 +36,19 @@ public class TwitchAPI {
         this.rateLimiter = new TwitchAPIRateLimiter(apiConfig);
     }
 
-    private TwitchUsersAPI initUsersAPI() {
-        return new TwitchUsersAPI(getApiConfig(), getRateLimiter());
+    /**
+     * Release the Kraken!
+     * @return Initialized Kraken API with the same API Client ID.
+     */
+    private Kraken initKraken() {
+        return new Kraken(getApiConfig().getClientId(), getApiConfig().getJedisPool());
     }
 
-    private TwitchStreamsAPI initStreamsAPI() {
-        return new TwitchStreamsAPI(getApiConfig(), getRateLimiter());
-    }
-
-    private TwitchClipsAPI initClipsAPI() {
-        return new TwitchClipsAPI(getApiConfig(), getRateLimiter());
+    /**
+     * Initialize the Twitch Helix API with the same API Client ID.
+     * @return Initialized Helix API with the same API Client ID.
+     */
+    private Helix initHelix() {
+        return new Helix(getApiConfig().getClientId(), getApiConfig().getJedisPool());
     }
 }

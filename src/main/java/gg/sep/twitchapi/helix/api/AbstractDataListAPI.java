@@ -33,11 +33,7 @@ public abstract class AbstractDataListAPI<T extends HelixObject, L extends DataL
      */
     protected Optional<L> executeDataListCall(final Call<L> call) {
         try {
-            final L l = call.execute().body();
-            if (l != null) {
-                l.getData().forEach(d -> d.setHelix(this.getHelix()));
-            }
-            return Optional.ofNullable(l);
+            return getHelix().getTwitchAPI().getRateLimiter().getResponse(call);
         } catch (final IOException e) {
             log.error(e);
             return Optional.empty();

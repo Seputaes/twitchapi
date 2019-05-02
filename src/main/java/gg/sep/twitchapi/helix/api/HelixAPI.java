@@ -35,11 +35,7 @@ public abstract class HelixAPI<T extends HelixObject> {
      */
     protected Optional<T> executeCall(final Call<T> call) {
         try {
-            final T t = call.execute().body();
-            if (t != null) {
-                t.setHelix(helix);
-            }
-            return Optional.ofNullable(t);
+            return getHelix().getTwitchAPI().getRateLimiter().getResponse(call);
         } catch (final IOException e) {
             log.error(e);
             return Optional.empty();

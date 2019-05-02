@@ -5,10 +5,8 @@ import java.util.Optional;
 
 import com.google.common.util.concurrent.RateLimiter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import gg.sep.twitchapi.TwitchAPIConfig;
 
@@ -19,7 +17,6 @@ import gg.sep.twitchapi.TwitchAPIConfig;
 public final class TwitchAPIRateLimiter {
 
     private final RateLimiter rateLimiter;
-    private CloseableHttpClient httpClient = null;
 
     /**
      * Construct the rate limiter using the specified API configuration.
@@ -29,35 +26,23 @@ public final class TwitchAPIRateLimiter {
         this.rateLimiter = RateLimiter.create(apiConfig.getApiRateLimit());
     }
 
-    private void ensureHttpClient() {
-        if (httpClient == null) {
-            this.httpClient = HttpClients.custom().build();
-        }
-    }
 
     /**
-     * Execute an HTTP request against the Twitch API, blocking until a rate limiter lock is acquired.
-     * @param request HTTP Request.
-     * @return HTTP Response, or empty if there was an API error.
+     * Rate limits the call against the configures rate limiter.
+     * @param call Retrofit call to execute.
+     * @param <P> The type of the call's response.
+     * @return An optional of the response if successful, or empty if error.
+     * @throws IOException Thrown by Retrofit if the call fails for some IO reason.
      */
-    public Optional<HttpResponse> execute(final HttpUriRequest request) {
-        this.ensureHttpClient();
-
+    public <P> Optional<P> getResponse(final Call<P> call) throws IOException {
         final Double waitTimeMs = this.rateLimiter.acquire() * 1000;
-        try {
-            final HttpResponse response = httpClient.execute(request);
-            log.info("Twitch API | path={}, rateLimitWaitMs={}", request.getURI().getPath(), waitTimeMs);
-
-            if (response.getStatusLine().getStatusCode() == 429) {
-                log.warn("Rate limit hit");
-                Waits.simpleSleep(200);
-                execute(request);
-            }
-            return Optional.of(response);
-        } catch (final IOException e) {
-            log.error("Error calling Twitch API. Request: {}", request);
-            log.error(e);
+        final Response<P> response = call.execute();
+        log.info("Twitch API | path={}, rateLimitWaitMs={}", call.request().url().encodedPath(), waitTimeMs);
+        if (response.code() == 429) {
+            log.warn("Rate limit hit");
+            Waits.simpleSleep(200);
+            return getResponse(call.clone());
         }
-        return Optional.empty();
+        return Optional.ofNullable(response.body());
     }
 }

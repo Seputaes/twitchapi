@@ -2,6 +2,7 @@ package gg.sep.twitchapi.kraken.interceptor;
 
 import redis.clients.jedis.JedisPool;
 
+import gg.sep.twitchapi.TwitchAPIConfig;
 import gg.sep.twitchapi.interceptor.AbstractAuthInterceptor;
 
 /**
@@ -13,9 +14,10 @@ public class KrakenAuthInterceptor extends AbstractAuthInterceptor {
     /**
      * Construct the auth interceptor using the specified Jedis Pool for auth caching.
      * @param jedisPool JedisPool which contains the oauth keys.
+     * @param config Twitch API configuration.
      */
-    public KrakenAuthInterceptor(final JedisPool jedisPool) {
-        super(jedisPool);
+    public KrakenAuthInterceptor(final JedisPool jedisPool, final TwitchAPIConfig config) {
+        super(jedisPool, config);
     }
 
     protected String getTokenPrefix() {

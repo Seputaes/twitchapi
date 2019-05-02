@@ -11,6 +11,7 @@ import redis.clients.jedis.JedisPool;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import gg.sep.twitchapi.TwitchAPI;
 import gg.sep.twitchapi.kraken.api.channels.ChannelsAPI;
 import gg.sep.twitchapi.kraken.api.users.UsersAPI;
 import gg.sep.twitchapi.kraken.interceptor.KrakenAuthInterceptor;
@@ -38,6 +39,9 @@ public class Kraken {
     private static final String BASE_URL = "https://api.twitch.tv/kraken/";
 
     @Getter
+    private final TwitchAPI twitchAPI;
+
+    @Getter
     private final Retrofit retrofit;
 
     @Getter
@@ -51,14 +55,16 @@ public class Kraken {
 
     /**
      * Construct the Kraken API wrapper for the specified API client ID.
+     * @param twitchAPI The Twitch API which contains this Kraken instance.
      * @param jedisPool Jedis Pool to be used for caching calls.
      * @param clientId Client ID of the Twitch App.
      */
-    public Kraken(final String clientId, final JedisPool jedisPool) {
+    public Kraken(final TwitchAPI twitchAPI, final String clientId, final JedisPool jedisPool) {
+        this.twitchAPI = twitchAPI;
         this.jedisPool = jedisPool;
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new KrakenClientInterceptor(clientId));
-        httpClient.addInterceptor(new KrakenAuthInterceptor(jedisPool));
+        httpClient.addInterceptor(new KrakenAuthInterceptor(jedisPool, twitchAPI.getApiConfig()));
         this.retrofit = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(getKrakenGson()))
             .client(httpClient.build())

@@ -13,6 +13,7 @@ import redis.clients.jedis.JedisPool;
 public class TwitchAPIConfig {
     private String login;
     private String clientId;
+    private String appOauthToken;
     private JedisPool jedisPool;
     private double apiRateLimit;
 }

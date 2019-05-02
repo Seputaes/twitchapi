@@ -11,6 +11,7 @@ import redis.clients.jedis.JedisPool;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import gg.sep.twitchapi.TwitchAPI;
 import gg.sep.twitchapi.helix.api.clips.ClipsAPI;
 import gg.sep.twitchapi.helix.api.games.GamesAPI;
 import gg.sep.twitchapi.helix.api.streams.StreamsAPI;
@@ -43,6 +44,9 @@ public class Helix {
     private static final String BASE_URL = "https://api.twitch.tv/helix/";
 
     @Getter
+    private final TwitchAPI twitchAPI;
+
+    @Getter
     private final Retrofit retrofit;
 
     @Getter
@@ -71,14 +75,16 @@ public class Helix {
 
     /**
      * Construct the Helix API wrapper for the specified API client ID.
+     * @param twitchAPI The parent TwitchAPI which contains the instance of Helix.
      * @param clientId Client ID of the Twitch App.
      * @param jedisPool Jedis Pool to be used for caching calls.
      */
-    public Helix(final String clientId, final JedisPool jedisPool) {
+    public Helix(final TwitchAPI twitchAPI, final String clientId, final JedisPool jedisPool) {
+        this.twitchAPI = twitchAPI;
         this.jedisPool = jedisPool;
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new HelixClientInterceptor(clientId));
-        httpClient.addInterceptor(new HelixAuthInterceptor(jedisPool));
+        httpClient.addInterceptor(new HelixAuthInterceptor(jedisPool, twitchAPI.getApiConfig()));
         this.retrofit = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(getHelixGson()))
             .client(httpClient.build())

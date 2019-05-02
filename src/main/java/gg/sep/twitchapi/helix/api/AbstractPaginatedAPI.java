@@ -10,8 +10,8 @@ import lombok.extern.log4j.Log4j2;
 import retrofit2.Call;
 
 import gg.sep.twitchapi.helix.Helix;
-import gg.sep.twitchapi.helix.model.Paginated;
 import gg.sep.twitchapi.helix.model.HelixObject;
+import gg.sep.twitchapi.helix.model.Paginated;
 
 /**
  * Abstract implementation of a Helix endpoint which returns a paginated list of Helix Objects of type {@code T}.
@@ -39,7 +39,7 @@ public abstract class AbstractPaginatedAPI<T extends HelixObject, P extends Pagi
         try {
             // don't attach Helix here since we're already iterating overall of the items in perform Pagination
             // it's done there instead.
-            return Optional.ofNullable(call.execute().body());
+            return getHelix().getTwitchAPI().getRateLimiter().getResponse(call);
         } catch (final IOException e) {
             log.error(e);
             return Optional.empty();

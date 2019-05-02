@@ -1,6 +1,5 @@
 package gg.sep.twitchapi;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -17,8 +16,10 @@ import gg.sep.twitchapi.util.TwitchAPIRateLimiter;
 @Log4j2
 public class TwitchAPI {
 
-    @Getter(AccessLevel.PRIVATE)
+    @Getter
     private final TwitchAPIConfig apiConfig;
+
+    @Getter
     private final TwitchAPIRateLimiter rateLimiter; // TODO get this working with retrofit
 
     @Getter(lazy = true)
@@ -41,7 +42,7 @@ public class TwitchAPI {
      * @return Initialized Kraken API with the same API Client ID.
      */
     private Kraken initKraken() {
-        return new Kraken(getApiConfig().getClientId(), getApiConfig().getJedisPool());
+        return new Kraken(this, getApiConfig().getClientId(), getApiConfig().getJedisPool());
     }
 
     /**
@@ -49,6 +50,6 @@ public class TwitchAPI {
      * @return Initialized Helix API with the same API Client ID.
      */
     private Helix initHelix() {
-        return new Helix(getApiConfig().getClientId(), getApiConfig().getJedisPool());
+        return new Helix(this, getApiConfig().getClientId(), getApiConfig().getJedisPool());
     }
 }

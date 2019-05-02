@@ -17,6 +17,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import retrofit2.Invocation;
 
+import gg.sep.twitchapi.TwitchAPIConfig;
 import gg.sep.twitchapi.auth.Scope;
 import gg.sep.twitchapi.auth.TokenFor;
 
@@ -28,13 +29,16 @@ public abstract class AbstractAuthInterceptor implements Interceptor {
 
     private static final String KEY_PREFIX = "twitchapi:oauth:";
 
+    private final TwitchAPIConfig config;
     private final JedisPool jedisPool;
 
     /**
      * Construct the auth interceptor using the specified Jedis Pool for auth caching.
      * @param jedisPool JedisPool which contains the oauth keys.
+     * @param config Twitch API configuration.
      */
-    public AbstractAuthInterceptor(final JedisPool jedisPool) {
+    public AbstractAuthInterceptor(final JedisPool jedisPool, final TwitchAPIConfig config) {
+        this.config = config;
         this.jedisPool = jedisPool;
     }
 
@@ -47,14 +51,11 @@ public abstract class AbstractAuthInterceptor implements Interceptor {
     @Override
     public Response intercept(final Chain chain) throws IOException {
         final Optional<String> oauthToken = getAuthToken(chain);
-
-        if (oauthToken.isPresent()) {
-            final Request request = chain.request().newBuilder()
-                .addHeader("Authorization", getTokenPrefix() + " " + oauthToken.get())
-                .build();
-            return chain.proceed(request);
-        }
-        return chain.proceed(chain.request());
+        final String token = oauthToken.orElse(config.getAppOauthToken());
+        final Request request = chain.request().newBuilder()
+            .addHeader("Authorization", getTokenPrefix() + " " + token)
+            .build();
+        return chain.proceed(request);
     }
 
     /**

@@ -76,7 +76,7 @@ public abstract class AbstractPaginatedAPI<T extends KrakenObject, P extends Pag
         while (results.size() < limit) {
             final Optional<P> getCall = innerCall(callParams, apiLimit, offset);
 
-            if (getCall.isEmpty()) {
+            if (!getCall.isPresent()) {
                 log.error("Inner API call was an empty response.");
                 return results;
             }

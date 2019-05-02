@@ -91,7 +91,7 @@ public abstract class AbstractPaginatedAPI<T extends HelixObject, P extends Pagi
 
             // call int the inner object for it to construct its own API call.
             final Optional<P> getCall = innerCall(callParams, first, cursor);
-            if (getCall.isEmpty()) {
+            if (!getCall.isPresent()) {
                 log.error("Inner API call was an empty response");
                 return results;
             }
